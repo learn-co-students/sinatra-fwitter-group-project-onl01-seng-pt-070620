@@ -5,13 +5,17 @@
   }
 </style>
 <h1>View tweet by <%= @tweet.user.username %></h1>
-<div class="container">
+<div class="container#other">
   <ul class="list-group">
       <div class="shadow-lg p-3 mb-5 bg-white rounded"><%= @tweet.content %> <br>
         <div class="right"> <small class="colored">posted by: <%= @tweet.user.username %><br>
           - <%= @tweet.created_at %></small></div>
-          <a href="/tweets/">Delete Tweet</a><Br>
-        <button class="btn btn-warning" name="Edit Tweet" id="Edit Tweet" onclick="window.location.href='/tweets/<%= @tweet.id %>/edit'">Edit Tweet</button>
+        <form method="post" action="/tweets/<%= @tweet.id %>">
+          <input hidden name="_method" value="DELETE">
+          <button type="submit" name="delete" id="delete" class="btn btn-warning">Delete Tweet</button>
+          <button type="button" class="btn btn-warning" name="Edit Tweet" id="Edit Tweet" onclick="window.location.href='/tweets/<%= @tweet.id %>/edit'">Edit Tweet</button>
+        </form>
       </div>
+
   </ul>
 </div>

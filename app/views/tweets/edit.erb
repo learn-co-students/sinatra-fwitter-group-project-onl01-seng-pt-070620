@@ -1,11 +1,11 @@
 <h1>Edit tweet by <%= @tweet.user.username %></h1>
-<div class="container">
+<div class="container#other">
   <ul class="list-group">
     <div class="shadow-lg p-3 mb-5 bg-white rounded">
       <form action='/tweets/<%= @tweet.id %>' method="post">
         <input type="text" hidden name="_method" value="PATCH">
         <input type="text" name="content" value="<%= @tweet.content %>">
-        <input type="submit" class="btn btn-warning" name="Edit Tweet" id="Edit Tweet" value="Edit Tweet">
+        <input type="submit" class="btn btn-warning" name="Edit Tweet" id="Edit Tweet" value="submit">
       </form>
     </div>
   </ul>
