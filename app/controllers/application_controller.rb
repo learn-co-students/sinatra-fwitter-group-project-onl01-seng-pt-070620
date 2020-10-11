@@ -10,7 +10,7 @@ class ApplicationController < Sinatra::Base
   end
 
   def slug 
-    slug = User.find_by_slug(params[:id])
+    slug = User.find_by_slug(params[:slug])
   end 
 
   helpers do
@@ -21,5 +21,5 @@ class ApplicationController < Sinatra::Base
     def is_logged_in?
         !!session[:user_id]
     end
-    end 
+  end 
 end 

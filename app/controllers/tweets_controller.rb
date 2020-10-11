@@ -8,7 +8,7 @@ class TweetsController < ApplicationController
         else 
             redirect '/login'
         end 
-    end 
+    end
 
     get '/tweets/new' do 
         @tweet = Tweet.find_by_id(params[:id])
@@ -22,8 +22,14 @@ class TweetsController < ApplicationController
 
     post '/tweets' do 
         if is_logged_in?
-        @tweet = Tweet.create(:content => params[:content], :user_id => params[:user_id])
-        redirect to "/tweets/#{@tweet.id}"
+            #binding.pry 
+            if !params[:content].empty? 
+                
+                 @tweet = Tweet.create(:content => params[:content], :user_id => current_user.id)
+                    redirect to "/tweets/#{@tweet.id}"
+            else
+                    redirect to '/tweets/new'
+            end 
         end 
     end 
 
@@ -37,25 +43,35 @@ class TweetsController < ApplicationController
     end 
 
     get '/tweets/:id/edit' do 
+        if is_logged_in?
         @tweet = Tweet.find_by_id(params[:id])
         erb :'tweets/edit'
+        else
+           redirect to '/login' 
+        end
     end 
 
     patch '/tweets/:id' do 
-        id = params[:id]
-        @tweet = Tweet.find_by(id: id)
-        attributes = params[:tweet]
-        @tweet.update(attributes)
-        redirect to "/tweets/#{@tweet.id}"
+        if is_logged_in?
+            id = params[:id]
+            @tweet = Tweet.find_by(id: id)
+            if !params[:content].empty?
+                @tweet.update(:content => params[:content])
+                redirect to "/tweets/#{@tweet.id}"
+            else
+            redirect to "/tweets/#{id}/edit"
+            end
+        else 
+            redirect to '/login'
+        end  
     end 
 
-      delete '/tweets/:id' do
+    delete '/tweets/:id' do
+        id = params[:id]
         @tweet = Tweet.find_by_id(params[:id])
-        if is_logged_in?
-            @user = current_user
-        Tweet.destroy(id)
-        redirect to '/login'
+        if current_user == @tweet.user
+            @tweet.destroy 
+        redirect to '/tweets'
         end 
     end 
-end
-
+end 

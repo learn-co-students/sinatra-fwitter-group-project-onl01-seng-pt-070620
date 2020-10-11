@@ -36,7 +36,6 @@ class UsersController < ApplicationController
      
         if user && user.authenticate(params[:password])
           session[:user_id] = user.id
-         # binding.pry
           redirect to "/tweets"
         end 
     end 
@@ -45,4 +44,10 @@ class UsersController < ApplicationController
         session.clear
         redirect to '/login'
     end
+
+    get '/users/:slug' do 
+        user = slug
+        @tweets = user.tweets
+        erb :'users/show'
+    end 
 end 
