@@ -9,7 +9,7 @@ class UsersController < ApplicationController
         if is_logged_in?
             redirect to '/tweets'
         else 
-            erb :'/users/signup'
+            erb :'users/signup'
         end 
     end 
 
@@ -24,20 +24,25 @@ class UsersController < ApplicationController
     end
 
     get '/login' do 
-        erb :'/users/login' 
+        if is_logged_in?
+            redirect to '/tweets'
+        else 
+        erb :'users/login' 
+        end
     end 
 
-    post '/login' do
+    post "/login" do
         user = User.find_by(:username => params[:username])
-    
+     
         if user && user.authenticate(params[:password])
           session[:user_id] = user.id
-          redirect '/tweets'
-      end
+         # binding.pry
+          redirect to "/tweets"
+        end 
     end 
 
-    get "/logout" do
+    get '/logout' do
         session.clear
-        redirect "/login"
+        redirect to '/login'
     end
 end 

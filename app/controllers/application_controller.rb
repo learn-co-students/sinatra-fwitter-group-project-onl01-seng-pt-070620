@@ -9,6 +9,10 @@ class ApplicationController < Sinatra::Base
     set :session_secret, "top_secret"
   end
 
+  def slug 
+    slug = User.find_by_slug(params[:id])
+  end 
+
   helpers do
     def current_user
       User.find(session[:user_id])
