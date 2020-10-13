@@ -53,7 +53,16 @@ class UsersController < ApplicationController
         redirect to "/login"
       end
 
-      
+      get '/show' do 
+        @user = current_user
+        erb :'users/show'
+      end
+
+      get '/users/:slug' do 
+        user = slug
+        @tweets = user.tweets
+        erb :'users/show'
+      end    
 
 
 
