@@ -30,7 +30,7 @@ class UsersController < ApplicationController
         user = User.find_by(username: params[:username])
 		if user && user.authenticate(params[:password])
             session[:user_id] = user.id
-            erb :"/tweets/index"
+            redirect to "/tweets"
         else
             erb :"users/login"
         end
@@ -45,9 +45,6 @@ class UsersController < ApplicationController
         end
     end
 
-    get '/show' do
-        erb :show
-    end
 
     get '/users/:slug' do
         @user = User.find_by_slug(params[:slug])
