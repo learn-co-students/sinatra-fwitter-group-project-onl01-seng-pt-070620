@@ -8,9 +8,6 @@ class ApplicationController < Sinatra::Base
     set :public_folder, 'public'
     set :views, 'app/views'
     enable :sessions
-<<<<<<< HEAD
-    set :sessions_secret, "secret"
-=======
     set :session_secret, "password_security"
   end
 
@@ -33,7 +30,6 @@ class ApplicationController < Sinatra::Base
         redirect '/'
       end
     end
->>>>>>> 18c0b426ab2fec0fae532bc5095ea1ac27a8c350
   end
 
   get "/" do
@@ -59,5 +55,5 @@ class ApplicationController < Sinatra::Base
       end
     end
   end
-  
+
 end 

@@ -22,10 +22,6 @@ class UsersController < ApplicationController
         erb :'users/login'
     end
 
-<<<<<<< HEAD
-    post '/login' do 
-        user = User.find_by(username: params[:username])
-=======
     get '/signup' do
         erb :'/users/signup'
     end
@@ -50,22 +46,13 @@ class UsersController < ApplicationController
 
     post '/login' do
         user = User.find_by(:username => params[:username])
->>>>>>> 18c0b426ab2fec0fae532bc5095ea1ac27a8c350
         if user && user.authenticate(params[:password])
             session[:user_id] = user.id
             redirect "/tweets"
         else
             redirect "/failure"
         end
-<<<<<<< HEAD
     end 
-=======
-    end
-
-    get "/failure" do
-        erb :"/users/failure"
-    end
->>>>>>> 18c0b426ab2fec0fae532bc5095ea1ac27a8c350
 
     get '/logout' do
         if logged_in?
@@ -75,13 +62,10 @@ class UsersController < ApplicationController
             redirect '/'
         end
     end
-<<<<<<< HEAD
     
     get "/failure" do
         erb :"/users/failure"
     end
-=======
->>>>>>> 18c0b426ab2fec0fae532bc5095ea1ac27a8c350
 
     get "/users/:slug" do
         # @tweets = Tweet.find_by(:user_id => session["user_id"])
