@@ -8,6 +8,7 @@ class ApplicationController < Sinatra::Base
     enable :sessions
     set :session_secret, "top_secret"
   end
+
       
     get '/' do
          erb :home
@@ -15,6 +16,8 @@ class ApplicationController < Sinatra::Base
 
 
     
+
+
   helpers do
     
     def current_user
