@@ -1,4 +1,5 @@
-<h3><%= @tweet.user.username%></h3>
+<h2><p>Hello, <%= current_user.username %></p></h2>
+
 <p><%= @tweet.content%></p>
 
   <form method="post" action="/tweets/<%=@tweet.id%>">
@@ -7,3 +8,4 @@
   </form>
   <br>
   <a href="/tweets/<%=@tweet.id%>/edit">Edit Tweet</a>
+        <a href="/tweets">Previous</a>
