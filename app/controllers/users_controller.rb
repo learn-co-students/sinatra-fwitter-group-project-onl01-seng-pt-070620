@@ -1,38 +1,52 @@
 class UsersController < ApplicationController
-  
+  get '/users/:slug' do
+    @user = User.find_by_slug(params[:slug])
+    erb :'users/show'
+  end
+
   get '/signup' do
-    redirect "/tweets" if logged_in?
-    erb :'users/create_user'
+    if !logged_in?
+      erb :'users/create_user', locals: {message: "Please sign up before you sign in"}
+    else
+      redirect to '/tweets'
+    end
   end
 
   post '/signup' do
-    params.each_value {|v| redirect "/signup" if v.empty?}
-    user = User.create(params)
-    session[:user_id] = user.id
-    redirect "/tweets"
+    if params[:username] == "" || params[:email] == "" || params[:password] == ""
+      redirect to '/signup'
+    else
+      @user = User.new(:username => params[:username], :email => params[:email], :password => params[:password])
+      @user.save
+      session[:user_id] = @user.id
+      redirect to '/tweets'
+    end
   end
 
   get '/login' do
-    redirect "/tweets" if logged_in?
-    erb :'users/login'
+    if !logged_in?
+      erb :'users/login'
+    else
+      redirect to '/tweets'
+    end
   end
 
   post '/login' do
-    user = User.find_by(username: params[:username])
+    user = User.find_by(:username => params[:username])
     if user && user.authenticate(params[:password])
       session[:user_id] = user.id
-      redirect "/tweets"
-		else
-      redirect "/login"
+      redirect to "/tweets"
+    else
+      redirect to '/signup'
     end
   end
 
   get '/logout' do
-    session.clear if logged_in?
-    redirect "/login"
-  end
-
-  get '/users/:slug' do
-    erb :'users/show'
+    if logged_in?
+      session.destroy
+      redirect to '/login'
+    else
+      redirect to '/'
+    end
   end
 end
