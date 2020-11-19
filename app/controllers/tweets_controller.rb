@@ -1,50 +1,90 @@
 class TweetsController < ApplicationController
-
   get '/tweets' do
-    redirect "/login" if !logged_in?
-    @tweets = Tweet.all
-    erb :'tweets/tweets'
+    if logged_in?
+      @tweets = Tweet.all
+      erb :'tweets/tweets'
+    else
+      redirect to '/login'
+    end
   end
 
   get '/tweets/new' do
-    redirect "/login" if !logged_in?
-    erb :'tweets/new'
+    if logged_in?
+      erb :'tweets/create_tweet'
+    else
+      redirect to '/login'
+    end
   end
 
   post '/tweets' do
-    redirect "/tweets/new" if params[:content].empty?
-    @tweet = Tweet.create(content: params[:content])
-    @tweet.user_id = current_user.id
-    @tweet.save
-    redirect "/tweets/#{@tweet.id}"
+    if logged_in?
+      if params[:content] == ""
+        redirect to "/tweets/new"
+      else
+        @tweet = current_user.tweets.build(content: params[:content])
+        if @tweet.save
+          redirect to "/tweets/#{@tweet.id}"
+        else
+          redirect to "/tweets/new"
+        end
+      end
+    else
+      redirect to '/login'
+    end
   end
 
   get '/tweets/:id' do
-    redirect "/login" if !logged_in?
-    @tweet = Tweet.find_by(id: params[:id])
-    erb :'tweets/show_tweet'
+    if logged_in?
+      @tweet = Tweet.find_by_id(params[:id])
+      erb :'tweets/show_tweet'
+    else
+      redirect to '/login'
+    end
   end
 
   get '/tweets/:id/edit' do
-    redirect "/login" if !logged_in?
-    @tweet = Tweet.find_by(id: params[:id])
-    if @tweet && @tweet.user_id == current_user.id
-      erb :'tweets/edit_tweet'
+    if logged_in?
+      @tweet = Tweet.find_by_id(params[:id])
+      if @tweet && @tweet.user == current_user
+        erb :'tweets/edit_tweet'
+      else
+        redirect to '/tweets'
+      end
     else
-      redirect "/tweets/"
+      redirect to '/login'
     end
   end
 
   patch '/tweets/:id' do
-    @tweet = Tweet.find_by(id: params[:id])
-    redirect "/tweets/#{@tweet.id}/edit" if params[:content].empty?
-    @tweet.update(content: params[:content])
-    redirect "/tweets/#{@tweet.id}"
+    if logged_in?
+      if params[:content] == ""
+        redirect to "/tweets/#{params[:id]}/edit"
+      else
+        @tweet = Tweet.find_by_id(params[:id])
+        if @tweet && @tweet.user == current_user
+          if @tweet.update(content: params[:content])
+            redirect to "/tweets/#{@tweet.id}"
+          else
+            redirect to "/tweets/#{@tweet.id}/edit"
+          end
+        else
+          redirect to '/tweets'
+        end
+      end
+    else
+      redirect to '/login'
+    end
   end
 
   delete '/tweets/:id/delete' do
-    tweet = Tweet.find_by(id: params[:id])
-    tweet.delete if tweet && tweet.user_id == current_user.id
-    redirect "/tweets"
+    if logged_in?
+      @tweet = Tweet.find_by_id(params[:id])
+      if @tweet && @tweet.user == current_user
+        @tweet.delete
+      end
+      redirect to '/tweets'
+    else
+      redirect to '/login'
+    end
   end
 end
